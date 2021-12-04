@@ -64,29 +64,6 @@ Config.MechanicStations = {
 
 }
 
-Config.AuthorizedWeapons = {
-	recrue = {
-		{weapon = 'weapon_wrench', price = 1}
-	},
-
-	novice = {
-		{weapon = 'weapon_wrench', price = 1}
-	},
-
-    experimente={
-		{weapon = 'weapon_wrench', price = 1}
-	},
-
-	chief={
-		{weapon = 'weapon_wrench', price = 1}
-        },
-           
-
-	boss = {
-		{weapon = 'weapon_wrench', price = 1}
-	}
-}
-
 Config.AuthorizedVehicles = {
 	car = {
 		recrue = {
