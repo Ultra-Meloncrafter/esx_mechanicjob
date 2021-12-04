@@ -98,36 +98,24 @@ Config.AuthorizedVehicles = {
 		novice = {
 			{model = 'flatbed', price = 1},
 			{model = 'towtruck2', price = 1},
-            {model = '17silv', price = 1},
-			{model = 'bmwm4', price = 1},
-			{model = 'honci4', price = 1},
 			{model = 'forklift', price = 1}
 		},
 
 		experimente = {
 			{model = 'flatbed', price = 1},
 			{model = 'towtruck2', price = 1},
-            {model = '17silv', price = 1},
-			{model = 'bmwm4', price = 1},
-			{model = 'honci4', price = 1},
 			{model = 'forklift', price = 1}	
 		},
 
 		chief = {
 			{model = 'flatbed', price = 1},
 			{model = 'towtruck2', price = 1},
-            {model = '17silv', price = 1},
-			{model = 'bmwm4', price = 1},
-			{model = 'honci4', price = 1},
 			{model = 'forklift', price = 1}
 		},														
 
 		boss = {
 			{model = 'flatbed', price = 1},
 			{model = 'towtruck2', price = 1},
-            {model = '17silv', price = 1},
-			{model = 'bmwm4', price = 1},
-			{model = 'honci4', price = 1},
 			{model = 'forklift', price = 1}
 		}
 	},
