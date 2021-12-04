@@ -187,6 +187,37 @@ function OpenCloakroomMenu()
 	end)
 end
 
+function OpenArmoryMenu(station)
+	local elements = {}
+
+	if Config.EnableArmoryManagement then
+		table.insert(elements, {label = _U('remove_object'),  value = 'get_stock'})
+		table.insert(elements, {label = _U('deposit_object'), value = 'put_stock'})
+	end
+
+	ESX.UI.Menu.CloseAll()
+
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'armory', {
+		title    = _U('armory'),
+		align    = 'top-left',
+		elements = elements
+	}, function(data, menu)
+
+		if data.current.value == 'put_stock' then
+			OpenPutStocksMenu()
+		elseif data.current.value == 'get_stock' then
+			OpenGetStocksMenu()
+		end
+
+	end, function(data, menu)
+		menu.close()
+
+		CurrentAction     = 'menu_armory'
+		CurrentActionMsg  = _U('open_armory')
+		CurrentActionData = {station = station}
+	end)
+end
+
 function OpenMechanicCraftMenu()
 	if Config.EnablePlayerManagement and ESX.PlayerData.job and ESX.PlayerData.job.grade_name ~= 'recrue' then
 		local elements = {
@@ -414,20 +445,6 @@ function OpenMobileMechanicActionsMenu()
 								CurrentlyTowedVehicle = targetVehicle
 								ESX.ShowNotification(_U('vehicle_success_attached'))
 
-								if NPCOnJob then
-									if NPCTargetTowable == targetVehicle then
-										ESX.ShowNotification(_U('please_drop_off'))
-										Config.Zones.VehicleDelivery.Type = 1
-
-										if Blips['NPCTargetTowableZone'] then
-											RemoveBlip(Blips['NPCTargetTowableZone'])
-											Blips['NPCTargetTowableZone'] = nil
-										end
-
-										Blips['NPCDelivery'] = AddBlipForCoord(Config.Zones.VehicleDelivery.Pos.x, Config.Zones.VehicleDelivery.Pos.y, Config.Zones.VehicleDelivery.Pos.z)
-										SetBlipRoute(Blips['NPCDelivery'], true)
-									end
-								end
 							else
 								ESX.ShowNotification(_U('cant_attach_own_tt'))
 							end
@@ -438,23 +455,6 @@ function OpenMobileMechanicActionsMenu()
 				else
 					AttachEntityToEntity(CurrentlyTowedVehicle, vehicle, 20, -0.5, -12.0, 1.0, 0.0, 0.0, 0.0, false, false, false, false, 20, true)
 					DetachEntity(CurrentlyTowedVehicle, true, true)
-
-					if NPCOnJob then
-						if NPCTargetDeleterZone then
-
-							if CurrentlyTowedVehicle == NPCTargetTowable then
-								ESX.Game.DeleteVehicle(NPCTargetTowable)
-								TriggerServerEvent('esx_mechanicjob:onNPCJobMissionCompleted')
-								StopNPCJob()
-								NPCTargetDeleterZone = false
-							else
-								ESX.ShowNotification(_U('not_right_veh'))
-							end
-
-						else
-							ESX.ShowNotification(_U('not_right_place'))
-						end
-					end
 
 					CurrentlyTowedVehicle = nil
 					ESX.ShowNotification(_U('veh_det_succ'))
@@ -543,39 +543,49 @@ function OpenGetStocksMenu()
 	end)
 end
 
-function OpenArmoryMenu(station)
-	local elements = {	}
+RegisterNetEvent('esx_mechanicjob:onHijack')
+AddEventHandler('esx_mechanicjob:onHijack', function()
+	local playerPed = PlayerPedId()
+	local coords = GetEntityCoords(playerPed)
 
-	if Config.EnableArmoryManagement then
-		table.insert(elements, {label = _U('remove_object'),  value = 'get_stock'})
-		table.insert(elements, {label = _U('deposit_object'), value = 'put_stock'})
-	end
+	if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
+		local vehicle
 
-	ESX.UI.Menu.CloseAll()
-
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'armory', {
-		title    = _U('armory'),
-		align    = 'top-left',
-		elements = elements
-	}, function(data, menu)
-
-		if data.current.value == 'put_stock' then
-			OpenPutStocksMenu()
-		elseif data.current.value == 'get_stock' then
-			OpenGetStocksMenu()
+		if IsPedInAnyVehicle(playerPed, false) then
+			vehicle = GetVehiclePedIsIn(playerPed, false)
+		else
+			vehicle = GetClosestVehicle(coords.x, coords.y, coords.z, 5.0, 0, 71)
 		end
 
-	end, function(data, menu)
-		menu.close()
+		local chance = math.random(100)
+		local alarm  = math.random(100)
 
-		CurrentAction     = 'menu_armory'
-		CurrentActionMsg  = _U('open_armory')
-		CurrentActionData = {station = station}
-	end)
-end
+		if DoesEntityExist(vehicle) then
+			if alarm <= 33 then
+				SetVehicleAlarm(vehicle, true)
+				StartVehicleAlarm(vehicle)
+			end
+
+			TaskStartScenarioInPlace(playerPed, 'WORLD_HUMAN_WELDING', 0, true)
+
+			Citizen.CreateThread(function()
+				Citizen.Wait(10000)
+				if chance <= 66 then
+					SetVehicleDoorsLocked(vehicle, 1)
+					SetVehicleDoorsLockedForAllPlayers(vehicle, false)
+					ClearPedTasksImmediately(playerPed)
+					ESX.ShowNotification(_U('veh_unlocked'))
+				else
+					ESX.ShowNotification(_U('hijack_failed'))
+					ClearPedTasksImmediately(playerPed)
+				end
+			end)
+		end
+	end
+end)
 
 function OpenPutStocksMenu()
-	ESX.TriggerServerCallback('esx_policejob:getPlayerInventory', function(inventory)
+	ESX.TriggerServerCallback('esx_mechanicjob:getPlayerInventory', function(inventory)
 		local elements = {}
 	
 		for i=1, #inventory.items, 1 do
@@ -607,7 +617,7 @@ function OpenPutStocksMenu()
 					else
 						menu2.close()
 						menu.close()
-						TriggerServerEvent('esx_policejob:putStockItems', itemName, count)
+						TriggerServerEvent('esx_mechanicjob:putStockItems', itemName, count)
 	
 						Citizen.Wait(300)
 						OpenPutStocksMenu()
@@ -619,97 +629,7 @@ function OpenPutStocksMenu()
 				menu.close()
 			end)
 		end)
-	end
-
-function OpenBuyWeaponsMenu()
-		local elements = {}
-		local playerPed = PlayerPedId()
-		PlayerData = ESX.GetPlayerData()
-	
-		for k,v in ipairs(Config.AuthorizedWeapons[ESX.PlayerData.job.grade_name]) do
-			local weaponNum, weapon = ESX.GetWeapon(v.weapon)
-			local components, label = {}
-			local hasWeapon = HasPedGotWeapon(playerPed, GetHashKey(v.weapon), false)
-	
-			if v.components then
-				for i=1, #v.components do
-					if v.components[i] then
-						local component = weapon.components[i]
-						local hasComponent = HasPedGotWeaponComponent(playerPed, GetHashKey(v.weapon), component.hash)
-	
-						if hasComponent then
-							label = ('%s: <span style="color:green;">%s</span>'):format(component.label, _U('armory_owned'))
-						else
-							if v.components[i] > 0 then
-								label = ('%s: <span style="color:green;">%s</span>'):format(component.label, _U('armory_item', ESX.Math.GroupDigits(v.components[i])))
-							else
-								label = ('%s: <span style="color:green;">%s</span>'):format(component.label, _U('armory_free'))
-							end
-						end
-	
-						table.insert(components, {
-							label = label,
-							componentLabel = component.label,
-							hash = component.hash,
-							name = component.name,
-							price = v.components[i],
-							hasComponent = hasComponent,
-							componentNum = i
-						})
-					end
-				end
-			end
-	
-			if hasWeapon and v.components then
-				label = ('%s: <span style="color:green;">></span>'):format(weapon.label)
-			elseif hasWeapon and not v.components then
-				label = ('%s: <span style="color:green;">%s</span>'):format(weapon.label, _U('armory_owned'))
-			else
-				if v.price > 0 then
-					label = ('%s: <span style="color:green;">%s</span>'):format(weapon.label, _U('armory_item', ESX.Math.GroupDigits(v.price)))
-				else
-					label = ('%s: <span style="color:green;">%s</span>'):format(weapon.label, _U('armory_free'))
-				end
-			end
-	
-			table.insert(elements, {
-				label = label,
-				weaponLabel = weapon.label,
-				name = weapon.name,
-				components = components,
-				price = v.price,
-				hasWeapon = hasWeapon
-			})
-		end
-	
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'armory_buy_weapons', {
-			title    = _U('armory_weapontitle'),
-			align    = 'top-left',
-			elements = elements
-		}, function(data, menu)
-			if data.current.hasWeapon then
-				if #data.current.components > 0 then
-					OpenWeaponComponentShop(data.current.components, data.current.name, menu)
-				end
-			else
-				ESX.TriggerServerCallback('esx_policejob:buyWeapon', function(bought)
-					if bought then
-						if data.current.price > 0 then
-							ESX.ShowNotification(_U('armory_bought', data.current.weaponLabel, ESX.Math.GroupDigits(data.current.price)))
-						end
-	
-						menu.close()
-						OpenBuyWeaponsMenu()
-					else
-						ESX.ShowNotification(_U('armory_money'))
-					end
-				end, data.current.name, 1)
-			end
-		end, function(data, menu)
-			menu.close()
-		end)
-	end
-	
+	end	
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
@@ -769,9 +689,7 @@ AddEventHandler('esx_mechanicjob:hasEnteredMarker', function(station, part, part
 end)
 
 AddEventHandler('esx_mechanicjob:hasExitedMarker', function(zone)
-	if zone =='VehicleDelivery' then
-		NPCTargetDeleterZone = false
-	elseif zone == 'Craft' then
+	if zone == 'Craft' then
 		TriggerServerEvent('esx_mechanicjob:stopCraft')
 		TriggerServerEvent('esx_mechanicjob:stopCraft2')
 		TriggerServerEvent('esx_mechanicjob:stopCraft3')

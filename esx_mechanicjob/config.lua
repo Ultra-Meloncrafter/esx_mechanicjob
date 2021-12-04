@@ -65,94 +65,25 @@ Config.MechanicStations = {
 }
 
 Config.AuthorizedWeapons = {
-	rekrut = {
-		{weapon = 'WEAPON_PISTOL', components = {0, 0, 1000, 4000}, price = 1},
-		{weapon = 'WEAPON_NIGHTSTICK', price = 1},
-		{weapon = 'WEAPON_STUNGUN', price = 1},
-		{weapon = 'WEAPON_FLASHLIGHT', price = 1}
+	recrue = {
+		{weapon = 'weapon_wrench', price = 1}
 	},
 
-	officer = {
-		{weapon = 'WEAPON_PISTOL', components = {0, 0, 1000, 4000, nil}, price = 1},
-		{weapon = 'WEAPON_COMBATPDW', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 1},
-		{weapon = 'WEAPON_NIGHTSTICK', price = 1},
-		{weapon = 'WEAPON_STUNGUN', price = 1},
-		{weapon = 'WEAPON_FLASHLIGHT', price = 1}
+	novice = {
+		{weapon = 'weapon_wrench', price = 1}
 	},
 
-        officer2={
-                {weapon = 'WEAPON_PISTOL', components = {0, 0, 1000, 4000, nil}, price = 1},
-		{weapon = 'WEAPON_COMBATPDW', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 1},
-		{weapon = 'WEAPON_NIGHTSTICK', price = 1},
-		{weapon = 'WEAPON_STUNGUN', price = 1},
-		{weapon = 'WEAPON_FLASHLIGHT', price = 1}
-
+    experimente={
+		{weapon = 'weapon_wrench', price = 1}
 	},
 
-	officer3={
-                {weapon = 'WEAPON_COMBATPISTOL', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 1},
-		{weapon = 'WEAPON_COMBATPDW', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 1},
-		{weapon = 'WEAPON_NIGHTSTICK', price = 1},
-		{weapon = 'WEAPON_STUNGUN', price = 1},
-		{weapon = 'WEAPON_FLASHLIGHT', price = 1}	
-
+	chief={
+		{weapon = 'weapon_wrench', price = 1}
         },
            
 
-	lieutenant = {
-		{weapon = 'WEAPON_COMBATPISTOL', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 1},
-		{weapon = 'WEAPON_COMBATPDW', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 1},
-                {weapon = 'WEAPON_PUMPSHOTGUN', components = {2000, 6000, nil }, price = 1},
-		{weapon = 'WEAPON_NIGHTSTICK', price = 1},
-		{weapon = 'WEAPON_STUNGUN', price = 1},
-		{weapon = 'WEAPON_FLASHLIGHT', price = 1}
-	},
-
-        detectiv = {
-		{weapon = 'WEAPON_COMBATPISTOL', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 1},
-		{weapon = 'WEAPON_COMBATPDW', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 1},
-                {weapon = 'WEAPON_PUMPSHOTGUN', components = {2000, 6000, nil }, price = 1},
-		{weapon = 'WEAPON_NIGHTSTICK', price = 1},
-		{weapon = 'WEAPON_STUNGUN', price = 1},
-		{weapon = 'WEAPON_FLASHLIGHT', price = 1}
-	},
-	
-        detectivleitung = {
-		{weapon = 'WEAPON_COMBATPISTOL', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 1},
-		{weapon = 'WEAPON_COMBATPDW', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 1},
-                {weapon = 'WEAPON_PUMPSHOTGUN', components = {2000, 6000, nil }, price = 1},
-		{weapon = 'WEAPON_NIGHTSTICK', price = 1},
-		{weapon = 'WEAPON_STUNGUN', price = 1},
-		{weapon = 'WEAPON_FLASHLIGHT', price = 1}
-	},
-
-	captain = {
-		{weapon = 'WEAPON_COMBATPISTOL', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 1},
-		{weapon = 'WEAPON_COMBATPDW', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 1},
-                {weapon = 'WEAPON_PUMPSHOTGUN', components = {2000, 6000, nil }, price = 1},
-		{weapon = 'WEAPON_NIGHTSTICK', price = 1},
-		{weapon = 'WEAPON_STUNGUN', price = 1},
-		{weapon = 'WEAPON_FLASHLIGHT', price = 1}	
-
-	},
-
-        cochief = {
-		{weapon = 'WEAPON_COMBATPISTOL', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 1},
-                {weapon = 'WEAPON_COMBATPDW', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 1},
-                {weapon = 'WEAPON_PUMPSHOTGUN', components = {2000, 6000, nil }, price = 1},
-		{weapon = 'WEAPON_NIGHTSTICK', price = 1},
-		{weapon = 'WEAPON_STUNGUN', price = 1},
-		{weapon = 'WEAPON_FLASHLIGHT', price = 1}
-	},
-
 	boss = {
-		{weapon = 'WEAPON_COMBATPISTOL', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 1},
-                {weapon = 'WEAPON_APPISTOL', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 1},
-                {weapon = 'WEAPON_COMBATPDW', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 1},
-                {weapon = 'WEAPON_PUMPSHOTGUN', components = {2000, 6000, nil }, price = 1},
-		{weapon = 'WEAPON_NIGHTSTICK', price = 1},
-		{weapon = 'WEAPON_STUNGUN', price = 0},
-      		{weapon = 'WEAPON_FLASHLIGHT', price = 1}
+		{weapon = 'weapon_wrench', price = 1}
 	}
 }
 

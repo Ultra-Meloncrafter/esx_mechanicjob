@@ -320,6 +320,36 @@ ESX.RegisterServerCallback('esx_mechanicjob:removeArmoryWeapon', function(source
 	end)
 end)
 
+ESX.RegisterUsableItem('blowpipe', function(source)
+	local _source = source
+	local xPlayer  = ESX.GetPlayerFromId(source)
+
+	xPlayer.removeInventoryItem('blowpipe', 1)
+
+	TriggerClientEvent('esx_mechanicjob:onHijack', _source)
+	TriggerClientEvent('esx:showNotification', _source, _U('you_used_blowtorch'))
+end)
+
+ESX.RegisterUsableItem('fixkit', function(source)
+	local _source = source
+	local xPlayer  = ESX.GetPlayerFromId(source)
+
+	xPlayer.removeInventoryItem('fixkit', 1)
+
+	TriggerClientEvent('esx_mechanicjob:onFixkit', _source)
+	TriggerClientEvent('esx:showNotification', _source, _U('you_used_repair_kit'))
+end)
+
+ESX.RegisterUsableItem('carokit', function(source)
+	local _source = source
+	local xPlayer  = ESX.GetPlayerFromId(source)
+
+	xPlayer.removeInventoryItem('carokit', 1)
+
+	TriggerClientEvent('esx_mechanicjob:onCarokit', _source)
+	TriggerClientEvent('esx:showNotification', _source, _U('you_used_body_kit'))
+end)
+
 ESX.RegisterServerCallback('esx_mechanicjob:buyWeapon', function(source, cb, weaponName, type, componentNum)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local authorizedWeapons, selectedWeapon = Config.AuthorizedWeapons[xPlayer.job.grade_name]
